@@ -8,6 +8,13 @@ class TimeProvider with ChangeNotifier {
 
   int get remainingTime => _remainingTime;
 
+  @override
+  void dispose() {
+    // Cancel the countdown timer to free resources
+    downTimer?.cancel();
+    super.dispose();
+  }
+
   void startTimer() {
     // If there's a timer already, cancel it first
     downTimer?.cancel();

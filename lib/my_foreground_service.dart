@@ -19,7 +19,7 @@ class MyForegroundService {
       ),
       foregroundTaskOptions: ForegroundTaskOptions(
         //TaskEvent interval 1000ms
-        eventAction: ForegroundTaskEventAction.repeat(10000),
+        eventAction: ForegroundTaskEventAction.repeat(1000),
         autoRunOnBoot: true,
         autoRunOnMyPackageReplaced: true,
         allowWakeLock: true,
@@ -73,25 +73,13 @@ class MyForegroundService {
     }
   }
 
-  static Future<void> updateForegroundService(int remainingTime) async {
-    String twoDigits(int n) => n.toString().padLeft(2, '0');
-    String minutes = twoDigits(remainingTime ~/ 60);
-    String seconds = twoDigits(remainingTime % 60);
-    await FlutterForegroundTask.updateService(
-      notificationTitle: 'Good Luck!',
-      notificationText: '$minutes:$seconds',
-    );
-  }
-}
-
-  
-  // void _onReceiveTaskData(Object data) {
-  //   if (data is Map<String, dynamic>) {
-  //     final dynamic timestampMillis = data["timestampMillis"];
-  //     if (timestampMillis != null) {
-  //       final DateTime timestamp =
-  //           DateTime.fromMillisecondsSinceEpoch(timestampMillis, isUtc: true);
-  //       print('timestamp: ${timestamp.toString()}');
-  //     }
-  //   }
+  // static Future<void> updateForegroundService(int remainingTime) async {
+  //   String twoDigits(int n) => n.toString().padLeft(2, '0');
+  //   String minutes = twoDigits(remainingTime ~/ 60);
+  //   String seconds = twoDigits(remainingTime % 60);
+  //   await FlutterForegroundTask.updateService(
+  //     notificationTitle: 'Good Luck!',
+  //     notificationText: '$minutes:$seconds',
+  //   );
   // }
+}

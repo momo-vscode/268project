@@ -20,6 +20,11 @@ class StartPageState extends State<StartPage> {
     timerDuration = const Duration(minutes: 25);
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   void resetDuration() {
     setState(() {
       // Reset duration

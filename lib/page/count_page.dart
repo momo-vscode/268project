@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:core';
 
-import 'package:counttimer/my_foreground_service.dart';
 import 'package:counttimer/time_provider.dart';
 import 'package:counttimer/widget/dialog_widget.dart';
 import 'package:counttimer/widget/duration_widget.dart';
@@ -25,9 +24,9 @@ class CountPageState extends State<CountPage> {
   void initState() {
     super.initState();
     Provider.of<TimeProvider>(context, listen: false).startTimer();
-    int remainingTime =
-        Provider.of<TimeProvider>(context, listen: false).remainingTime;
-    MyForegroundService.startForegroundService();
+    // int remainingTime =
+    //     Provider.of<TimeProvider>(context, listen: false).remainingTime;
+    // MyForegroundService.startForegroundService();
 
     // Assuming you're streaming gyro events
     // gyroStream = StreamController<bool>();
@@ -59,6 +58,7 @@ class CountPageState extends State<CountPage> {
   void dispose() {
     gyroSubscription?.cancel();
     gyroStream?.close();
+    Provider.of<TimeProvider>(context, listen: false).downTimer?.cancel();
     super.dispose();
   }
 

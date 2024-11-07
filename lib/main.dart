@@ -3,6 +3,7 @@ import 'package:counttimer/my_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'page/start_page.dart';
 import 'time_provider.dart';
@@ -30,14 +31,10 @@ class TimerApp extends StatefulWidget {
 }
 
 class TimerAppState extends State<TimerApp> with WidgetsBindingObserver {
-  //late final for the context
-  late final TimeProvider _timeProvider =
-      Provider.of<TimeProvider>(context, listen: false);
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    // FlutterForegroundTask.addTaskDataCallback(_onReceiveTaskData);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await MyForegroundService.requestAditionalPermissions();
       MyForegroundService.initForegroundService();
@@ -46,24 +43,27 @@ class TimerAppState extends State<TimerApp> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    // FlutterForegroundTask.removeTaskDataCallback(_onReceiveTaskData);
     WidgetsBinding.instance.removeObserver(this);
-    _timeProvider.removeListener(() {
-      MyForegroundService.updateForegroundService(_timeProvider.remainingTime);
-    });
     MyForegroundService.stopForegroundService();
     super.dispose();
   }
 
+//再详细，特别是stop service 检查notice
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.paused) {
+      //  data --> startForegroundService()--> call handler onRepeatEvent(updateservice)
+      //sendDataToTask() parameter is an object
+      //the handker use onReceiveData(Object data) to access it
+      int remainingTime =
+          Provider.of<TimeProvider>(context, listen: false).remainingTime;
+      // FlutterForegroundTask.sendDataToTask({'remainingTime': remainingTime});
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setInt('remainingTime', remainingTime);
+
       await MyForegroundService.startForegroundService();
-      //addlistener related to the ChangeNotifier notifyListeners() for dynamic noticefycation when at the background
-      _timeProvider.addListener(() {
-        MyForegroundService.updateForegroundService(
-            _timeProvider.remainingTime);
-      });
     } else if (state == AppLifecycleState.resumed) {
+      await MyForegroundService.stopForegroundService();
+    } else if (state == AppLifecycleState.detached) {
       await MyForegroundService.stopForegroundService();
     }
   }
