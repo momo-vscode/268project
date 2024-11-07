@@ -1,12 +1,11 @@
 import 'dart:async';
 import 'dart:core';
 
-import 'package:counttimer/main.dart';
+import 'package:counttimer/my_foreground_service.dart';
 import 'package:counttimer/time_provider.dart';
 import 'package:counttimer/widget/dialog_widget.dart';
 import 'package:counttimer/widget/duration_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:provider/provider.dart';
 
 class CountPage extends StatefulWidget {
@@ -28,7 +27,7 @@ class CountPageState extends State<CountPage> {
     Provider.of<TimeProvider>(context, listen: false).startTimer();
     int remainingTime =
         Provider.of<TimeProvider>(context, listen: false).remainingTime;
-    _startService(remainingTime);
+    MyForegroundService.startForegroundService();
 
     // Assuming you're streaming gyro events
     // gyroStream = StreamController<bool>();
@@ -37,23 +36,6 @@ class CountPageState extends State<CountPage> {
     //     isGyroStopped = gyroStopped;
     // });
     // });
-  }
-
-  Future<ServiceRequestResult> _startService(int remainingTime) async {
-    if (await FlutterForegroundTask.isRunningService) {
-      return FlutterForegroundTask.restartService();
-    } else {
-      return FlutterForegroundTask.startService(
-        serviceId: 256,
-        notificationTitle: 'Foreground Service is running',
-        notificationText: '$remainingTime',
-        notificationIcon: null,
-        notificationButtons: [
-          const NotificationButton(id: 'btn_hello', text: "button"),
-        ],
-        callback: startCallback,
-      );
-    }
   }
 
 //when the timer change state to pause checkFocusState()
