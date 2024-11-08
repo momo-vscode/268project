@@ -41,9 +41,9 @@ class MyTaskHandler extends TaskHandler {
   // Called when the task is destroyed.
   @override
   Future<void> onDestroy(DateTime timestamp) async {
-    prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('remainingTime', remainingTime);
     remainingTime = 0;
+    prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('remainingTime', 0);
     print('onDestroy');
   }
 }

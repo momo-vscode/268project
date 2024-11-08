@@ -64,7 +64,10 @@ class TimerAppState extends State<TimerApp> with WidgetsBindingObserver {
     } else if (state == AppLifecycleState.resumed) {
       await MyForegroundService.stopForegroundService();
     } else if (state == AppLifecycleState.detached) {
-      await MyForegroundService.stopForegroundService();
+      Provider.of<TimeProvider>(context, listen: false).updateTimer(0);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setInt('remainingTime', 0);
+      await FlutterForegroundTask.stopService();
     }
   }
 

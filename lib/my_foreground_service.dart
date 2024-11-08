@@ -20,10 +20,11 @@ class MyForegroundService {
       foregroundTaskOptions: ForegroundTaskOptions(
         //TaskEvent interval 1000ms
         eventAction: ForegroundTaskEventAction.repeat(1000),
-        autoRunOnBoot: true,
-        autoRunOnMyPackageReplaced: true,
+        autoRunOnBoot: false,
+        autoRunOnMyPackageReplaced: false,
         allowWakeLock: true,
         allowWifiLock: true,
+        // stopWithTask: true,
       ),
     );
   }
@@ -36,8 +37,8 @@ class MyForegroundService {
       return await FlutterForegroundTask.startService(
         //define an id, make sure unique
         serviceId: 256,
-        notificationTitle: 'CountTimer',
-        notificationText: 'App is in the background.',
+        notificationTitle: 'Background notice.',
+        notificationText: 'CounterTimer.',
         notificationIcon: null,
         // notificationButtons:...
         // top level method, defined in main
